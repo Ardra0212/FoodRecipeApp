@@ -1,34 +1,22 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
-const app = express();   // ✅ create app FIRST
+const userRoutes = require("./routes/userRoutes");
+// const connectDB = require("./config/db"); // optional
 
-app.use(cors());         // ✅ then use it
+const app = express();
+
+/* MIDDLEWARE */
+app.use(cors());
 app.use(express.json());
 
-const users = [{ username: "admin", password: "1234" }];
 
-// LOGIN ROUTE
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
 
-  const user = users.find(
-    u => u.username === username && u.password === password
-  );
+/* ROUTES */
+app.use("/", userRoutes);
 
-  if (user) {
-    res.json({
-      msg: "Login success",
-      user: {
-        username: user.username
-      }
-    });
-  } else {
-    res.json({ msg: "Invalid credentials" });
-  }
-});
-
-// START SERVER
+/* SERVER */
 app.listen(5001, "0.0.0.0", () => {
   console.log("User Service running on 5001");
 });
